@@ -3,10 +3,9 @@ using CardGame.Interfaces;
 
 namespace CardGame.Models
 {
-    public class Jugador : IJugador
+    public class JugadorPoker : IJugador
     {
-
-        //Atributos del jugador
+       //Atributos del jugador
         private string _nombre;        
         public string Nombre
         {
@@ -41,13 +40,29 @@ namespace CardGame.Models
             }
         }
 
-        
+        private IDealer _dealer;
+        public IDealer Dealer
+        {
+            get
+            {
+                return _dealer;
+            }
+            set
+            {
+                if(value == null)
+                {
+                    throw new NotImplementedException();
+                }
+                _dealer = value;
+            }
+        }
 
         //Constructor del jugador
-        public Jugador(string nombre, List<ICarta> cartas )
+        public JugadorPoker(string nombre, IDealer dealer)
         {
             Nombre = nombre;
-            Cartas = cartas;
+            Cartas = new List<ICarta>();
+            Dealer = dealer;            
         }
 
         public ICarta DevolverCarta(int indiceCarta)
@@ -139,7 +154,34 @@ namespace CardGame.Models
 
         public void RealizarJugada()
         {
-            throw new NotImplementedException();
+           //obtener un número al azar de cartas a descartar entre 1 y 5
+            Random random = new Random();
+            int numeroDeCartasADescartar = random.Next(1, 5);
+
+            //Mostrar el número de cartas a descartar
+            Console.WriteLine($"El jugador {Nombre} va a descartar {numeroDeCartasADescartar} carta(s): ");
+
+            //Crear una lista de cartas a descartar
+            List<ICarta> cartasADescartar = new List<ICarta>();
+
+            //descartar las cartas
+            for (int i = 0; i < numeroDeCartasADescartar; i++)
+            {
+                //obtener un número al azar de cartas a descartar entre 0 y el número de cartas que tiene el jugador
+                int indiceCartaADescartar = random.Next(0, Cartas.Count - 1);
+
+                //mostrar la carta a descartar
+                ICarta cartaADescartar = MostrarCarta(indiceCartaADescartar);
+
+                //el jugador devuelve la carta
+                cartaADescartar = DevolverCarta(indiceCartaADescartar);
+
+                //agregar la carta a descartar a la lista de cartas a descartar
+                cartasADescartar.Add(cartaADescartar);
+            }
+
+            //devolver las cartas al dealer
+            Dealer.RecogerCartas(cartasADescartar);
         }
     }
 }
