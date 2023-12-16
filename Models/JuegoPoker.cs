@@ -7,6 +7,19 @@ namespace CardGame.Models
 {
     public class JuegoPoker : IJuego
     {
+        private enum TipoDeManoEnum
+        {
+            CartaAlta = 1,
+            Par = 2,
+            DoblePar = 3,
+            Trio = 4,
+            Escalera = 5,
+            Color = 6,
+            FullHouse = 7,
+            Poker = 8,
+            EscaleraDeColor = 9,
+            EscaleraReal = 10
+        }
 
         private IDealer _dealer;
         public IDealer Dealer 
