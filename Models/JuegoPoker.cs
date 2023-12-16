@@ -89,5 +89,20 @@ namespace CardGame.Models
             throw new NotImplementedException();
         }
         
+        /* Se utiliza una clase privada para determinar el resultado de la mano de cada jugador
+        para que en el caso de que 2 jugadores tengan el mismo resultado de mano, se pueda determinar
+        el ganador en base a sus cartas.
+        */
+        private class ResultadoMano
+        {
+            public TipoDeManoEnum TipoDeMano { get; set; }
+            public IEnumerable<ICarta> Cartas { get; set; }
+
+            public ResultadoMano(TipoDeManoEnum tipoDeMano, IEnumerable<ICarta> cartas)
+            {
+                TipoDeMano = tipoDeMano;
+                Cartas = cartas;
+            }
+        }
     }
 }
