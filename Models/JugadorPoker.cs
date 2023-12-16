@@ -40,13 +40,29 @@ namespace CardGame.Models
             }
         }
 
-        
+        private IDealer _dealer;
+        public IDealer Dealer
+        {
+            get
+            {
+                return _dealer;
+            }
+            set
+            {
+                if(value == null)
+                {
+                    throw new NotImplementedException();
+                }
+                _dealer = value;
+            }
+        }
 
         //Constructor del jugador
-        public JugadorPoker(string nombre = "Jugador")
+        public JugadorPoker(string nombre, IDealer dealer)
         {
             Nombre = nombre;
             Cartas = new List<ICarta>();
+            Dealer = dealer;            
         }
 
         public ICarta DevolverCarta(int indiceCarta)
@@ -138,7 +154,25 @@ namespace CardGame.Models
 
         public void RealizarJugada()
         {
-            throw new NotImplementedException();
+           //obtener un número al azar de cartas a descartar entre 1 y 5
+            Random random = new Random();
+            int numeroDeCartasADescartar = random.Next(1, 5);
+
+            //Crear una lista de cartas a descartar
+            List<ICarta> cartasADescartar = new List<ICarta>();
+
+            //descartar las cartas
+            for (int i = 0; i < numeroDeCartasADescartar; i++)
+            {
+                //obtener un número al azar de cartas a descartar entre 0 y el número de cartas que tiene el jugador
+                int indiceCartaADescartar = random.Next(0, Cartas.Count - 1);
+
+                //descartar la carta
+                cartasADescartar.Add(DevolverCarta(indiceCartaADescartar));
+            }
+
+            //devolver las cartas al dealer
+            Dealer.RecogerCartas(cartasADescartar);
         }
     }
 }
