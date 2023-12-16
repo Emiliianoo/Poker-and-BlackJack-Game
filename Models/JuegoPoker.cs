@@ -106,6 +106,24 @@ namespace CardGame.Models
             }
         }
 
+        private ResultadoMano? ObtenerEscalera(List<ICarta> cartas)
+        {
+            // Se ordenan las cartas de mayor a menor
+            var cartasOrdenadas = cartas.OrderByDescending(c => c.Valor).ToList();
+
+            // Se checa si las cartas son consecutivas
+            foreach(var carta in cartasOrdenadas)
+            {
+                if(carta.Valor != cartasOrdenadas[0].Valor - cartasOrdenadas.IndexOf(carta))
+                {
+                    return null;
+                }
+            }
+
+            // Si las cartas son de tipo escalera, se retorna el resultado de la mano con el tipo de mano Escalera
+            return new ResultadoMano(TipoDeManoEnum.Escalera, cartasOrdenadas);
+        }
+
         private ResultadoMano? ObtenerTrio(List<ICarta> cartas)
         {
             // Se selecciona el trio y se pone delante de la lista de cartas
