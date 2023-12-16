@@ -105,7 +105,22 @@ namespace CardGame.Models
                 Cartas = cartas;
             }
         }
-        
+
+        //poker = 4 cartas del mismo valor
+        private ResultadoMano? ObtenerPoker(List<ICarta> cartas)
+        {
+            var poker = cartas.GroupBy(c => c.Valor)
+                                .Where(g => g.Count() == 4)
+                                .SelectMany(g => g)
+                                .ToList();
+
+            // Se añaden al final de la lista de cartas las cartas que no son poker
+            var cartasOrdenadas = poker.Concat(poker.Except(poker).OrderByDescending(c => c.Valor)).ToList();
+
+            // Si las cartas son de tipo poker, se retorna el resultado de la mano con el tipo de mano Poker
+            return poker.Count == 4 ? new ResultadoMano(TipoDeManoEnum.Poker, cartasOrdenadas) : null;
+        }
+
         private ResultadoMano? ObtenerFullHouse(List<ICarta> cartas)
         {
             var trio = ObtenerTrio(cartas);
