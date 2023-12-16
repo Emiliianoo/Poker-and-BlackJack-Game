@@ -17,7 +17,7 @@ namespace CardGame.Models
             {
                 if(string.IsNullOrWhiteSpace(value))
                 {
-                    throw new NotImplementedException();
+                    throw new Exception("El Nombre no puede ser espacios en blanco");
                 }
                 _nombre = value;
             }
@@ -34,7 +34,7 @@ namespace CardGame.Models
             {
                 if(value == null)
                 {
-                    throw new NotImplementedException();
+                    throw new Exception("La lista de cartas no puede ser nula");
                 }
                 _cartas = value;
             }
@@ -51,7 +51,7 @@ namespace CardGame.Models
             {
                 if(value == null)
                 {
-                    throw new NotImplementedException();
+                    throw new Exception("El dealer no puede ser nulo");
                 }
                 _dealer = value;
             }
@@ -81,7 +81,7 @@ namespace CardGame.Models
             }
             else
             {
-                throw new NotImplementedException();
+                throw new Exception("El indice de la carta para devolver no existe");
             }
         }
 
@@ -90,7 +90,7 @@ namespace CardGame.Models
             //Devuelve todas las cartas del jugador si es que este tiene cartas
             if (Cartas.Count == 0)
             {
-                throw new NotImplementedException();
+                throw new Exception("El jugador no tiene cartas para devolver");
             }
             else
             {
@@ -116,7 +116,7 @@ namespace CardGame.Models
             }
             else
             {
-                throw new NotImplementedException();
+                throw new Exception("El indice de la carta para mostrar no existe");
             }
         }
 
@@ -125,7 +125,7 @@ namespace CardGame.Models
              //Muestra todas las cartas del jugador si es que este tiene cartas
             if (Cartas.Count == 0)
             {
-                throw new NotImplementedException();
+                throw new Exception("El jugador no tiene cartas para mostrar");
             }
             else
             {
@@ -147,7 +147,7 @@ namespace CardGame.Models
             if (cartas.Count != 0) {
                 Cartas.AddRange(cartas);
             } else {
-                throw new NotImplementedException();
+                throw new Exception("No hay cartas para agregar");
             }
 
         }
