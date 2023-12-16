@@ -5,6 +5,66 @@ namespace CardGame.Models
 {
     public class JugadorBlackJack : IJugador
     {
+
+         private string _nombre;        
+        public string Nombre
+        {
+            get
+            {
+                return _nombre;
+            }
+            set
+            {
+                if(string.IsNullOrWhiteSpace(value))
+                {
+                    throw new Exception("El Nombre no puede ser espacios en blanco");
+                }
+                _nombre = value;
+            }
+        }
+
+        private List<ICarta> _cartas;
+        public List<ICarta> Cartas
+        {
+            get
+            {
+                return _cartas;
+            }
+            set
+            {
+                if(value == null)
+                {
+                    throw new Exception("La lista de cartas no puede ser nula");
+                }
+                _cartas = value;
+            }
+        }
+
+        private IDealer _dealer;
+        public IDealer Dealer
+        {
+            get
+            {
+                return _dealer;
+            }
+            set
+            {
+                if(value == null)
+                {
+                    throw new Exception("El dealer no puede ser nulo");
+                }
+                _dealer = value;
+            }
+        }
+
+        public JugadorBlackJack(string nombre, IDealer dealer)
+        {
+            Nombre = nombre;
+            Cartas = new List<ICarta>();
+            Dealer = dealer;            
+        }
+
+
         public ICarta DevolverCarta(int indiceCarta)
         {
             throw new NotImplementedException();
