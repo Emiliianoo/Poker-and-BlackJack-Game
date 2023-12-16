@@ -106,6 +106,24 @@ namespace CardGame.Models
             }
         }
 
+        private ResultadoMano? ObtenerEscaleraColor(List<ICarta> cartas)
+        {
+            var escalera = ObtenerEscalera(cartas);
+
+            if(escalera != null)
+            {
+                var color = ObtenerColor(cartas);
+
+                if(color != null)
+                {
+                    // Si las cartas son de tipo escalera de color, se retorna el resultado de la mano con el tipo de mano Escalera de Color
+                    return new ResultadoMano(TipoDeManoEnum.EscaleraDeColor, escalera.Cartas);
+                }
+            }
+
+            return null;
+        }
+
         //poker = 4 cartas del mismo valor
         private ResultadoMano? ObtenerPoker(List<ICarta> cartas)
         {
