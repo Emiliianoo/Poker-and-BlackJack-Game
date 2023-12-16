@@ -1,5 +1,8 @@
 using System;
 using CardGame.Interfaces;
+using CardGame.Enumeradores;
+using System.IO.Compression;
+using System.Diagnostics;
 
 namespace CardGame.Models
 {
@@ -42,7 +45,12 @@ namespace CardGame.Models
 
         public void IniciarJuego()
         {
-            throw new NotImplementedException();
+            // Cada jugador recibe inicialmente 5 cartas
+            foreach(var jugador in _jugadores)
+            {
+                List<ICarta> cartas = _dealer.RepartirCartas(5);
+                jugador.ObtenerCartas(cartas);
+            }
         }
 
         public void JugarRonda()
