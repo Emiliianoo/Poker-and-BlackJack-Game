@@ -30,18 +30,13 @@ namespace CardGame.Models
 
         public void AgregarJugador(IJugador jugador)
         {
-            if(_jugadores.Count < 5)
+            if(_jugadores.Contains(jugador))
             {
-                if(_jugadores.Contains(jugador))
-                {
-                    throw new Exception("El jugador ya está en la lista");
-                }
-
-                _jugadores.Add(jugador);
+                throw new Exception("El jugador ya existe en el juego");
             }
             else
             {
-                throw new Exception("No se pueden agregar más de 5 jugadores");
+                _jugadores.Add(jugador);
             }
         }
 
