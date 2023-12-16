@@ -106,6 +106,23 @@ namespace CardGame.Models
             }
         }
 
+        private ResultadoMano? ObtenerTrio(List<ICarta> cartas)
+        {
+            // Se selecciona el trio y se pone delante de la lista de cartas
+            var trio = cartas.GroupBy(c => c.Valor) // Se agrupan las cartas por su valor
+                             .Where(g => g.Count() == 3) // Se seleccionan las cartas que se repiten 3 veces
+                             .SelectMany(g => g) // Se seleccionan las cartas que se repiten 3 veces
+                             .ToList(); // Se convierte el resultado en una lista
+
+            // Se crea una nueva lista donde se coloca el trio al frente y el resto de las cartas sigue
+            var cartasOrdenadas = trio.Concat(
+                cartas.Except(trio).OrderByDescending(c => c.Valor) // Se ordenan las cartas que no son trio
+                ).ToList();
+
+            // Si las cartas son de tipo trio, se retorna el resultado de la mano con el tipo de mano Trio
+            return trio.Count == 3 ? new ResultadoMano(TipoDeManoEnum.Trio, cartasOrdenadas) : null;
+        }
+
         private ResultadoMano? ObtenerDoblePareja(List<ICarta> cartas)
         {
             // Se seleccionan las cartas que se repiten 2 veces
