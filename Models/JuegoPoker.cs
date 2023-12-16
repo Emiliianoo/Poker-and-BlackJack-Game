@@ -7,6 +7,7 @@ namespace CardGame.Models
 {
     public class JuegoPoker : IJuego
     {
+        private IJugador Ganador { get; set; }
         private enum TipoDeManoEnum
         {
             CartaAlta = 1,
