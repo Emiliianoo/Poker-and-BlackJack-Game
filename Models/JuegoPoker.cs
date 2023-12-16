@@ -105,7 +105,24 @@ namespace CardGame.Models
                 Cartas = cartas;
             }
         }
-        
+
+        private ResultadoMano? ObtenerDoblePareja(List<ICarta> cartas)
+        {
+            // Se seleccionan las cartas que se repiten 2 veces
+            var parejas = cartas.GroupBy(c => c.Valor)
+                                .Where(g => g.Count() == 2)
+                                .SelectMany(g => g)
+                                .ToList();
+
+            // se le añade al final de la lista de cartas las cartas que no son parejas
+            var cartasOrdenadas = parejas.Concat(
+                cartas.Except(parejas).OrderByDescending(c => c.Valor)
+                ).ToList();
+
+            // Si las cartas son de tipo doble pareja, se retorna el resultado de la mano con el tipo de mano Doble Par
+            return parejas.Count == 4 ? new ResultadoMano(TipoDeManoEnum.DoblePar, cartasOrdenadas) : null;
+        }
+
         private ResultadoMano? ObtenerPareja(List<ICarta> cartas)
         {
             // Se selecciona la pareja y se pone delante de la lista de cartas
