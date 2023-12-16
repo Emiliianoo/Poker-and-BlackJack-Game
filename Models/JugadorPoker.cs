@@ -158,6 +158,9 @@ namespace CardGame.Models
             Random random = new Random();
             int numeroDeCartasADescartar = random.Next(1, 5);
 
+            //Mostrar el número de cartas a descartar
+            Console.WriteLine($"El jugador {Nombre} va a descartar {numeroDeCartasADescartar} carta(s): ");
+
             //Crear una lista de cartas a descartar
             List<ICarta> cartasADescartar = new List<ICarta>();
 
@@ -167,8 +170,14 @@ namespace CardGame.Models
                 //obtener un número al azar de cartas a descartar entre 0 y el número de cartas que tiene el jugador
                 int indiceCartaADescartar = random.Next(0, Cartas.Count - 1);
 
-                //descartar la carta
-                cartasADescartar.Add(DevolverCarta(indiceCartaADescartar));
+                //mostrar la carta a descartar
+                ICarta cartaADescartar = MostrarCarta(indiceCartaADescartar);
+
+                //el jugador devuelve la carta
+                cartaADescartar = DevolverCarta(indiceCartaADescartar);
+
+                //agregar la carta a descartar a la lista de cartas a descartar
+                cartasADescartar.Add(cartaADescartar);
             }
 
             //devolver las cartas al dealer
