@@ -2,12 +2,12 @@ using System;
 using CardGame.Interfaces;
 using CardGame.Enumeradores;
 using System.IO.Compression;
-using System.Diagnostics;
 
 namespace CardGame.Models
 {
     public class JuegoPoker : IJuego
     {
+
         private IDealer _dealer;
         public IDealer Dealer 
         {
@@ -55,12 +55,26 @@ namespace CardGame.Models
 
         public void JugarRonda()
         {
-            throw new NotImplementedException();
+            // Cada jugador realiza su jugada
+            foreach(var jugador in _jugadores)
+            {
+                jugador.RealizarJugada();
+            }
+
+            // Una vez que todos los jugadores han realizado su jugada, se muestran sus cartas
+            foreach(var jugador in _jugadores)
+            {
+                jugador.MostrarCartas();
+            }
+
+            // Se determina el ganador
+            MostrarGanador();
         }
 
         public void MostrarGanador()
         {
             throw new NotImplementedException();
         }
+        
     }
 }
