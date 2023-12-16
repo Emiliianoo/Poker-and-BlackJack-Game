@@ -14,7 +14,7 @@ namespace CardGame.Models
             {
                 for(int j = 1; j <= 13; j++)
                 {
-                    _cards.Add(new Card((FigurasCartasEnum)i, (ValoresCartasEnum)j));
+                    _cards.Add(new Carta((FigurasCartasEnum)i, (ValoresCartasEnum)j));
                 }
             }
         }
