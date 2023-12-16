@@ -89,7 +89,7 @@ namespace CardGame.Models
         {
             throw new NotImplementedException();
         }
-        
+
         /* Se utiliza una clase privada para determinar el resultado de la mano de cada jugador
         para que en el caso de que 2 jugadores tengan el mismo resultado de mano, se pueda determinar
         el ganador en base a sus cartas.
@@ -104,6 +104,23 @@ namespace CardGame.Models
                 TipoDeMano = tipoDeMano;
                 Cartas = cartas;
             }
+        }
+        
+        private ResultadoMano? ObtenerPareja(List<ICarta> cartas)
+        {
+            // Se selecciona la pareja y se pone delante de la lista de cartas
+            var pareja = cartas.GroupBy(c => c.Valor) // Se agrupan las cartas por su valor
+                               .Where(g => g.Count() == 2) // Se seleccionan las cartas que se repiten 2 veces
+                               .SelectMany(g => g) // Se seleccionan las cartas que se repiten 2 veces
+                               .ToList(); // Se convierte el resultado en una lista
+
+            // Se crea una nueva lista donde se coloca la pareja al frente y el resto de las cartas sigue
+            var cartasOrdenadas = pareja.Concat(
+                cartas.Except(pareja).OrderByDescending(c => c.Valor) // Se ordenan las cartas que no son pareja
+                ).ToList();
+
+            // Si las cartas son de tipo pareja, se retorna el resultado de la mano con el tipo de mano Par
+            return pareja.Count == 2 ? new ResultadoMano(TipoDeManoEnum.Par, cartasOrdenadas) : null;
         }
 
         private ResultadoMano ObtenerCartaAlta(List<ICarta> cartas)
