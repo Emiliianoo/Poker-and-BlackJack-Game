@@ -105,5 +105,14 @@ namespace CardGame.Models
                 Cartas = cartas;
             }
         }
+
+        private ResultadoMano ObtenerCartaAlta(List<ICarta> cartas)
+        {
+            var cartasMayorAMenor = cartas.OrderByDescending(c => c.Valor);
+
+            // Se retorna el resultado de la mano con la primera carta de la lista 
+            // de cartas ordenadas siendo la carta más alta
+            return new ResultadoMano(TipoDeManoEnum.CartaAlta, cartasMayorAMenor);
+        }
     }
 }
