@@ -105,6 +105,25 @@ namespace CardGame.Models
                 Cartas = cartas;
             }
         }
+        
+        private ResultadoMano? ObtenerFullHouse(List<ICarta> cartas)
+        {
+            var trio = ObtenerTrio(cartas);
+
+            if(trio != null)
+            {
+                //cartas sin trio (trio devuelve las 5 cartas asi que se quitan las primeras 3)
+                var cartasSinTrio = trio.Cartas.Skip(3).ToList();
+
+                // Si las cartas restantes tienen son pareja, se retorna el resultado de la mano con el tipo de mano Full House
+                if(cartasSinTrio[0].Valor == cartasSinTrio[1].Valor)
+                {
+                    return new ResultadoMano(TipoDeManoEnum.FullHouse, trio.Cartas);
+                }
+            }
+
+            return null;
+        }
 
         private ResultadoMano? ObtenerColor(List<ICarta> cartas)
         {
