@@ -106,6 +106,19 @@ namespace CardGame.Models
             }
         }
 
+        private ResultadoMano? ObtenerColor(List<ICarta> cartas)
+        {
+            // Se seleccionan las cartas que tienen el mismo palo
+            var cartasDeMismaFigura = cartas.GroupBy(c => c.Figura)
+                                            .Where(g => g.Count() >= 5)
+                                            .SelectMany(g => g)
+                                            .OrderByDescending(c => c.Valor)
+                                            .ToList();
+
+            // Si las cartas son de tipo color, se retorna el resultado de la mano con el tipo de mano Color
+            return cartasDeMismaFigura.Count >= 5 ? new ResultadoMano(TipoDeManoEnum.Color, cartasDeMismaFigura) : null;
+        }
+
         private ResultadoMano? ObtenerEscalera(List<ICarta> cartas)
         {
             // Se ordenan las cartas de mayor a menor
