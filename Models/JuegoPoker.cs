@@ -106,7 +106,23 @@ namespace CardGame.Models
                 Cartas = cartas;
             }
         }
-        
+
+        private ResultadoMano? ObtenerEscaleraReal(List<ICarta> cartas)
+        {
+            var escaleraDeColor = ObtenerEscaleraColor(cartas);
+
+            if(escaleraDeColor != null)
+            {
+                // Si las cartas son de tipo escalera real, se retorna el resultado de la mano con el tipo de mano Escalera Real
+                if((int) escaleraDeColor.Cartas.First().Valor == 1)
+                {
+                    return new ResultadoMano(TipoDeManoEnum.EscaleraReal, escaleraDeColor.Cartas);
+                }
+            }
+
+            return null;
+        }
+
         private ResultadoMano? ObtenerEscaleraColor(List<ICarta> cartas)
         {
             var escalera = ObtenerEscalera(cartas);
