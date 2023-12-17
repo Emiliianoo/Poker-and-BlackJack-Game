@@ -7,9 +7,16 @@ namespace CardGame.Models
 {
     public class BlackJackDealer : IDealer
     {
+        private IDeckDeCartas _deck;
+
+        public BlackJackDealer()
+        {
+            _deck = new Deck();
+        }
+
         public void BarajearDeck()
         {
-            throw new NotImplementedException();
+            _deck.BarajearDeck();
         }
 
         public void RecogerCartas(List<ICarta> cartas)
