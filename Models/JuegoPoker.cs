@@ -107,6 +107,24 @@ namespace CardGame.Models
             }
         }
 
+        private ResultadoMano ObtenerResultadoMano(List<ICarta> cartas)
+        {
+
+            // Se obtiene el resultado de la mano del jugador
+            var resultadoMano = ObtenerEscaleraReal(cartas) ??
+                                ObtenerEscaleraColor(cartas) ??
+                                ObtenerPoker(cartas) ??
+                                ObtenerFullHouse(cartas) ??
+                                ObtenerColor(cartas) ??
+                                ObtenerEscalera(cartas) ??
+                                ObtenerTrio(cartas) ??
+                                ObtenerDoblePareja(cartas) ??
+                                ObtenerPareja(cartas) ??
+                                ObtenerCartaAlta(cartas);
+
+            return resultadoMano;
+        }
+
         private ResultadoMano? ObtenerEscaleraReal(List<ICarta> cartas)
         {
             var escaleraDeColor = ObtenerEscaleraColor(cartas);
