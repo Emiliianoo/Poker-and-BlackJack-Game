@@ -2,16 +2,16 @@ using CardGame.Interfaces;
 
 namespace CardGame.Models
 {
-    public class Dealer : IDealer
+    public class PokerDealer : IDealer
     {
         private IDeckDeCartas _deck;
 
-        public Dealer()
+        public PokerDealer()
         {
             _deck = new Deck();
         }
 
-        public Dealer(IDeckDeCartas deck)
+        public PokerDealer(IDeckDeCartas deck)
         {
             this._deck = deck;
         }
