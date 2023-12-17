@@ -87,20 +87,22 @@ namespace CardGame.Models
 
         public List<ICarta> DevolverTodasLasCartas()
         {
-            //Devuelve todas las cartas del jugador si es que este tiene cartas
+            // Devuelve todas las cartas del jugador si es que este tiene cartas
             if (Cartas.Count == 0)
             {
                 throw new Exception("El jugador no tiene cartas para devolver");
             }
             else
             {
-                //obtener todas las cartas del jugador
-                List<ICarta> cartasADevolver = Cartas;
+                // Obtener todas las cartas del jugador
+                List<ICarta> cartasADevolver = new List<ICarta>(Cartas);
 
-                //Quitar todas las cartas de la lista de cartas del jugador
-                Cartas.Clear();
+                // Quitar todas las cartas de la lista de cartas del jugador
+                Cartas.RemoveAll(carta => true);
 
-                //Devolver todas las cartas
+                Dealer.RecogerCartas(cartasADevolver);
+
+                // Devolver todas las cartas
                 return cartasADevolver;
             }
         }
@@ -129,6 +131,7 @@ namespace CardGame.Models
             }
             else
             {
+                Console.WriteLine($"El jugador {Nombre} tiene las siguientes cartas: ");
                 //Mostrar todas las cartas en la consola
                 foreach (ICarta carta in Cartas)
                 {
@@ -182,6 +185,9 @@ namespace CardGame.Models
 
             //devolver las cartas al dealer
             Dealer.RecogerCartas(cartasADescartar);
+
+            //obtener nuevas cartas del dealer
+            ObtenerCartas(Dealer.RepartirCartas(numeroDeCartasADescartar));
         }
     }
 }
