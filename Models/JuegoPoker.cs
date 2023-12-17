@@ -3,6 +3,7 @@ using CardGame.Interfaces;
 using CardGame.Enumeradores;
 using System.IO.Compression;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 
 namespace CardGame.Models
 {
@@ -59,12 +60,17 @@ namespace CardGame.Models
 
         public void IniciarJuego()
         {
+            // Se barajea el deck
+            _dealer.BarajearDeck();
+
             // Cada jugador recibe inicialmente 5 cartas
             foreach(var jugador in _jugadores)
             {
                 List<ICarta> cartas = _dealer.RepartirCartas(5);
                 jugador.ObtenerCartas(cartas);
             }
+
+            JugarRonda();
         }
 
         public void JugarRonda()
@@ -73,12 +79,14 @@ namespace CardGame.Models
             foreach(var jugador in _jugadores)
             {
                 jugador.RealizarJugada();
+                Console.WriteLine();
             }
 
             // Una vez que todos los jugadores han realizado su jugada, se muestran sus cartas
             foreach(var jugador in _jugadores)
             {
                 jugador.MostrarCartas();
+                Console.WriteLine();
             }
 
             // Se determina el ganador
@@ -90,14 +98,27 @@ namespace CardGame.Models
             List<ResultadoMano> resultados = new List<ResultadoMano>();
             foreach(var jugador in _jugadores)
             {
-                ResultadoMano resultado = ObtenerResultadoMano(jugador.DevolverTodasLasCartas());
+                var cartas = jugador.DevolverTodasLasCartas();
+                ResultadoMano resultado = ObtenerResultadoMano(cartas);
+
                 resultado.Jugador = jugador; 
+
+                resultados.Add(resultado);
             }
 
             // Se ordenan los resultados de mayor a menor
             resultados = resultados.OrderByDescending(r => r.TipoDeMano).ToList();
 
             List<ResultadoMano> resultadosMayores = resultados.Where(r => r.TipoDeMano == resultados[0].TipoDeMano).ToList();
+
+            // Mostrar los resultados de cada jugador
+            Console.WriteLine("\n\nResultados de la ronda:");
+            foreach(var resultado in resultados)
+            {
+                var jugador = resultado.Jugador as JugadorPoker;
+                Console.WriteLine($"{jugador.Nombre} tiene {resultado.TipoDeMano}");
+            }
+            Console.WriteLine();
 
             // Si hay más de un jugador con el mismo resultado de mano, se determina el ganador en base a sus cartas
             if(resultadosMayores.Count > 1)
@@ -106,14 +127,15 @@ namespace CardGame.Models
             }
             else
             {
-                Console.WriteLine($"El ganador es: {resultados[0].Jugador}");
+                Console.WriteLine("El ganador es:");
+                var ganador = resultados[0].Jugador as JugadorPoker;
+                Console.WriteLine($"{ganador.Nombre} tiene {resultados[0].TipoDeMano}");
             }
         }
 
         private void ObtenerGanadorPorCartas(List<ResultadoMano> resultados)
         {
-            List<ResultadoMano> ganadores = new List<ResultadoMano>();
-            ganadores.Add(resultados[0]);
+            List<ResultadoMano> ganadores = new List<ResultadoMano>{ resultados[0] };
 
             // Se comparan las cartas de cada jugador
             for(int i = 1; i < resultados.Count; i++)
@@ -140,7 +162,7 @@ namespace CardGame.Models
                     }
                     else if(cartasGanador[j].Valor < cartasJugadorActual[j].Valor)
                     {
-                        ganadores.Clear();
+                        ganadores.RemoveAll(g => true);
                         ganadores.Add(resultado);
                         break;
                     }
@@ -159,7 +181,8 @@ namespace CardGame.Models
 
             foreach(var ganador in ganadores)
             {
-                Console.WriteLine($"{ganador.Jugador}");
+                var jugador = ganador.Jugador as JugadorPoker;
+                Console.WriteLine($"{jugador.Nombre} con {ganador.TipoDeMano} mayor");
             }
         }
         
@@ -294,6 +317,7 @@ namespace CardGame.Models
             // Se checa si las cartas son consecutivas
             foreach(var carta in cartasOrdenadas)
             {
+                // Si la carta no es la primera y no es consecutiva a la carta anterior, no es una escalera
                 if(carta.Valor != cartasOrdenadas[0].Valor - cartasOrdenadas.IndexOf(carta))
                 {
                     // si es la ultima carta y es un as, pero la escalera es de K, Q, J, 10
