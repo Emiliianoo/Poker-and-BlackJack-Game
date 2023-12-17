@@ -8,7 +8,6 @@ namespace CardGame.Models
 {
     public class JuegoPoker : IJuego
     {
-        private IJugador Ganador { get; set; }
         private enum TipoDeManoEnum
         {
             CartaAlta = 1,
@@ -88,15 +87,89 @@ namespace CardGame.Models
 
         public void MostrarGanador()
         {
-            throw new NotImplementedException();
+            List<ResultadoMano> resultados = new List<ResultadoMano>();
+            foreach(var jugador in _jugadores)
+            {
+                ResultadoMano resultado = ObtenerResultadoMano(jugador.DevolverTodasLasCartas());
+                resultado.Jugador = jugador; 
+            }
+
+            // Se ordenan los resultados de mayor a menor
+            resultados = resultados.OrderByDescending(r => r.TipoDeMano).ToList();
+
+            List<ResultadoMano> resultadosMayores = resultados.Where(r => r.TipoDeMano == resultados[0].TipoDeMano).ToList();
+
+            // Si hay más de un jugador con el mismo resultado de mano, se determina el ganador en base a sus cartas
+            if(resultadosMayores.Count > 1)
+            {
+                ObtenerGanadorPorCartas(resultadosMayores);
+            }
+            else
+            {
+                Console.WriteLine($"El ganador es: {resultados[0].Jugador}");
+            }
         }
 
+        private void ObtenerGanadorPorCartas(List<ResultadoMano> resultados)
+        {
+            List<ResultadoMano> ganadores = new List<ResultadoMano>();
+            ganadores.Add(resultados[0]);
+
+            // Se comparan las cartas de cada jugador
+            for(int i = 1; i < resultados.Count; i++)
+            {
+                ResultadoMano resultado = resultados[i];
+                List<ICarta> cartasGanador = ganadores[0].Cartas.ToList();
+                List<ICarta> cartasJugadorActual = resultado.Cartas.ToList();
+
+                // Se comparan las cartas de cada jugador
+                for(int j = 0; j < cartasGanador.Count; j++)
+                {
+                    if(j == cartasGanador.Count - 1)
+                    {
+                        // Si se llega a la última carta y son iguales, se determina que hay más de un ganador
+                        if(cartasGanador[j].Valor == cartasJugadorActual[j].Valor)
+                        {
+                            ganadores.Add(resultado);
+                        }
+                    }
+                    
+                    if(cartasGanador[j].Valor > cartasJugadorActual[j].Valor)
+                    {
+                        break;
+                    }
+                    else if(cartasGanador[j].Valor < cartasJugadorActual[j].Valor)
+                    {
+                        ganadores.Clear();
+                        ganadores.Add(resultado);
+                        break;
+                    }
+                }
+            }
+
+            // Imprimir los ganadores
+            if(ganadores.Count > 1)
+            {
+                Console.WriteLine("Empate entre los siguientes jugadores:");
+            }
+            else
+            {
+                Console.WriteLine("El ganador es:");
+            }
+
+            foreach(var ganador in ganadores)
+            {
+                Console.WriteLine($"{ganador.Jugador}");
+            }
+        }
+        
         /* Se utiliza una clase privada para determinar el resultado de la mano de cada jugador
         para que en el caso de que 2 jugadores tengan el mismo resultado de mano, se pueda determinar
         el ganador en base a sus cartas.
         */
         private class ResultadoMano
         {
+            public IJugador Jugador { get; set; } = null;
             public TipoDeManoEnum TipoDeMano { get; set; }
             public IEnumerable<ICarta> Cartas { get; set; }
 
