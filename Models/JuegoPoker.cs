@@ -158,13 +158,32 @@ namespace CardGame.Models
                     
                     if(cartasGanador[j].Valor > cartasJugadorActual[j].Valor)
                     {
-                        break;
+                        if(cartasJugadorActual[j].Valor == ValoresCartasEnum.As)
+                        {
+                            // Si la carta del jugador actual es un As y la del ganador no, se cambia el ganador
+                            ganadores.RemoveAll(g => true);
+                            ganadores.Add(resultado);
+                        }
+                        else
+                        {
+                            // Si la carta del jugador actual no es un As y es mayor, se cambia el ganador
+                            break;
+                        }
                     }
                     else if(cartasGanador[j].Valor < cartasJugadorActual[j].Valor)
                     {
-                        ganadores.RemoveAll(g => true);
-                        ganadores.Add(resultado);
-                        break;
+                        if(cartasGanador[j].Valor == ValoresCartasEnum.As)
+                        {
+                            // Si la carta del ganador es un As y la del jugador actual no, no se cambia el ganador
+                            break;
+                        }
+                        else
+                        {
+                            // Si la carta del ganador no es un As y es menor, se cambia el ganador
+                            ganadores.RemoveAll(g => true);
+                            ganadores.Add(resultado);
+                            break;
+                        }
                     }
                 }
             }
