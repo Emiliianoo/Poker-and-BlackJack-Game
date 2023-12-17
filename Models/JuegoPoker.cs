@@ -42,7 +42,7 @@ namespace CardGame.Models
 
         public JuegoPoker()
         {
-            _dealer = new Dealer();
+            _dealer = new PokerDealer();
             _jugadores = new List<IJugador>();
         }
 
