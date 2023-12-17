@@ -2,6 +2,7 @@ using System;
 using CardGame.Interfaces;
 using CardGame.Enumeradores;
 using System.IO.Compression;
+using System.Reflection.Metadata;
 
 namespace CardGame.Models
 {
@@ -105,7 +106,7 @@ namespace CardGame.Models
                 Cartas = cartas;
             }
         }
-
+        
         private ResultadoMano? ObtenerEscaleraColor(List<ICarta> cartas)
         {
             var escalera = ObtenerEscalera(cartas);
@@ -132,8 +133,11 @@ namespace CardGame.Models
                                 .SelectMany(g => g)
                                 .ToList();
 
+            var cartasSinPoker = cartas.Except(poker).OrderByDescending(c => c.Valor).ToList();
+            cartasSinPoker = MoverAsAlPrincipio(cartasSinPoker);
+
             // Se añaden al final de la lista de cartas las cartas que no son poker
-            var cartasOrdenadas = poker.Concat(poker.Except(poker).OrderByDescending(c => c.Valor)).ToList();
+            var cartasOrdenadas = poker.Concat(cartasSinPoker).ToList();
 
             // Si las cartas son de tipo poker, se retorna el resultado de la mano con el tipo de mano Poker
             return poker.Count == 4 ? new ResultadoMano(TipoDeManoEnum.Poker, cartasOrdenadas) : null;
@@ -167,6 +171,10 @@ namespace CardGame.Models
                                             .OrderByDescending(c => c.Valor)
                                             .ToList();
 
+            // Los Ases pueden ser tanto la carta más alta como la más baja, por lo que se debe
+            // mover cada As al principio de la lista
+            cartasDeMismaFigura = MoverAsAlPrincipio(cartasDeMismaFigura);
+
             // Si las cartas son de tipo color, se retorna el resultado de la mano con el tipo de mano Color
             return cartasDeMismaFigura.Count >= 5 ? new ResultadoMano(TipoDeManoEnum.Color, cartasDeMismaFigura) : null;
         }
@@ -181,6 +189,19 @@ namespace CardGame.Models
             {
                 if(carta.Valor != cartasOrdenadas[0].Valor - cartasOrdenadas.IndexOf(carta))
                 {
+                    // si es la ultima carta y es un as, pero la escalera es de K, Q, J, 10
+                    // se debe mover el as al principio de la lista
+                    bool esUnAs = carta.Valor == ValoresCartasEnum.As;
+                    bool esUltimaCarta = cartasOrdenadas.IndexOf(carta) == cartasOrdenadas.Count - 1;
+                    if(esUnAs && cartasOrdenadas[0].Valor == ValoresCartasEnum.Rey && esUltimaCarta)
+                    {
+                        // Se mueve la carta al principio de la lista
+                        cartasOrdenadas.Insert(0, cartasOrdenadas.Last());
+                        cartasOrdenadas.RemoveAt(cartasOrdenadas.Count - 1);
+
+                        return new ResultadoMano(TipoDeManoEnum.Escalera, cartasOrdenadas);
+                    }
+
                     return null;
                 }
             }
@@ -197,10 +218,12 @@ namespace CardGame.Models
                              .SelectMany(g => g) // Se seleccionan las cartas que se repiten 3 veces
                              .ToList(); // Se convierte el resultado en una lista
 
+            var cartasSinTrio = cartas.Except(trio).OrderByDescending(c => c.Valor).ToList();
+            
+            cartasSinTrio = MoverAsAlPrincipio(cartasSinTrio);
+
             // Se crea una nueva lista donde se coloca el trio al frente y el resto de las cartas sigue
-            var cartasOrdenadas = trio.Concat(
-                cartas.Except(trio).OrderByDescending(c => c.Valor) // Se ordenan las cartas que no son trio
-                ).ToList();
+            var cartasOrdenadas = trio.Concat(cartasSinTrio);
 
             // Si las cartas son de tipo trio, se retorna el resultado de la mano con el tipo de mano Trio
             return trio.Count == 3 ? new ResultadoMano(TipoDeManoEnum.Trio, cartasOrdenadas) : null;
@@ -213,6 +236,9 @@ namespace CardGame.Models
                                 .Where(g => g.Count() == 2)
                                 .SelectMany(g => g)
                                 .ToList();
+
+            parejas.OrderByDescending(c => c.Valor);
+            parejas = MoverAsAlPrincipio(parejas);
 
             // se le añade al final de la lista de cartas las cartas que no son parejas
             var cartasOrdenadas = parejas.Concat(
@@ -231,10 +257,10 @@ namespace CardGame.Models
                                .SelectMany(g => g) // Se seleccionan las cartas que se repiten 2 veces
                                .ToList(); // Se convierte el resultado en una lista
 
-            // Se crea una nueva lista donde se coloca la pareja al frente y el resto de las cartas sigue
-            var cartasOrdenadas = pareja.Concat(
-                cartas.Except(pareja).OrderByDescending(c => c.Valor) // Se ordenan las cartas que no son pareja
-                ).ToList();
+            var cartasSinPareja = cartas.Except(pareja).OrderByDescending(c => c.Valor).ToList();
+            cartasSinPareja = MoverAsAlPrincipio(cartasSinPareja);
+
+            var cartasOrdenadas = pareja.Concat(cartasSinPareja).ToList();
 
             // Si las cartas son de tipo pareja, se retorna el resultado de la mano con el tipo de mano Par
             return pareja.Count == 2 ? new ResultadoMano(TipoDeManoEnum.Par, cartasOrdenadas) : null;
@@ -242,11 +268,39 @@ namespace CardGame.Models
 
         private ResultadoMano ObtenerCartaAlta(List<ICarta> cartas)
         {
-            var cartasMayorAMenor = cartas.OrderByDescending(c => c.Valor);
+            var cartasOrdenadas = cartas.OrderByDescending(c => c.Valor).ToList();
+
+            // Mover cada As al principio de la lista
+            cartasOrdenadas = MoverAsAlPrincipio(cartasOrdenadas);
 
             // Se retorna el resultado de la mano con la primera carta de la lista 
             // de cartas ordenadas siendo la carta más alta
-            return new ResultadoMano(TipoDeManoEnum.CartaAlta, cartasMayorAMenor);
+            return new ResultadoMano(TipoDeManoEnum.CartaAlta, cartasOrdenadas);
+        }
+
+        private List<ICarta> MoverAsAlPrincipio(List<ICarta> cartas)
+        {
+            var cartasOrdenadas = cartas.OrderByDescending(c => c.Valor).ToList();
+
+            // Mover cada As al principio de la lista
+            var listConAses = new List<ICarta>();
+            var listSinAses = new List<ICarta>();
+            for(int i = 0; i <= cartasOrdenadas.Count - 1; i++)
+            {
+                if(cartasOrdenadas[i].Valor == ValoresCartasEnum.As)
+                {
+                    listConAses.Add(cartasOrdenadas[i]);
+                }
+                else
+                {
+                    // Se añaden al final de la lista las cartas que no son Ases
+                    listSinAses.Add(cartasOrdenadas[i]);
+                }
+            }
+
+            var listaFinal = listConAses.Concat(listSinAses).ToList();
+
+            return listaFinal;
         }
     }
 }
