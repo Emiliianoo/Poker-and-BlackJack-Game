@@ -143,7 +143,12 @@ namespace CardGame.Models
 
         public void ObtenerCartas(List<ICarta> cartas)
         {
-            throw new NotImplementedException();
+            //Si las cartas recibidas no estan vacias se agregan a la lista de cartas del jugador
+            if (cartas.Count != 0) {
+                Cartas.AddRange(cartas);
+            } else {
+                throw new Exception("No hay cartas para agregar");
+            }
         }
 
         public void RealizarJugada()
