@@ -36,16 +36,27 @@ namespace CardGame
             } 
             else if(opcion == 2)
             {
-                throw new NotImplementedException();
+                //Crear un juego de BlackJack
+                var juegoBlackJack = new JuegoBlackJack(1);
+
+                //Preguntar cuantos jugadores van a jugar
+                Console.WriteLine("Cuantos jugadores van a jugar?");
+                int numeroJugadores = Convert.ToInt32(Console.ReadLine());
+
+                //Crear los jugadores
+                for(int i = 0; i < numeroJugadores; i++)
+                {
+                    string nombreJugador = CrearNombreJugador();
+                    juegoBlackJack.AgregarJugador(new JugadorBlackJack(nombreJugador, juegoBlackJack.Dealer));                    
+                }
+
+                //Iniciar el juego
+                juegoBlackJack.IniciarJuego();
             } 
             else 
             {
                 throw new Exception("Opcion no valida");
             }
-
-            
-
-              
         }
         
         static string CrearNombreJugador()
