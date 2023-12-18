@@ -8,7 +8,6 @@ namespace CardGame.Models
     public class JuegoBlackJack : IJuego
     {
         private List<IJugador> _jugadores;
-        private List<ICarta> _cartasDelDealer;
         private int _numeroDeRonadas;
 
         public IDealer Dealer { get; private set; }
@@ -18,7 +17,7 @@ namespace CardGame.Models
         public JuegoBlackJack(int nRondas)
         {
             _jugadores = new List<IJugador>();
-            //Dealer = new BlackJackDealer();
+            Dealer = new BlackJackDealer();
             _numeroDeRonadas = nRondas;
         }
 
@@ -44,6 +43,8 @@ namespace CardGame.Models
 
         public void JugarRonda()
         {
+            var Dealer = this.Dealer as BlackJackDealer ?? throw new Exception("El dealer no es de tipo BlackJackDealer");
+
             // El dealer barajea las cartas
             Dealer.BarajearDeck();
 
@@ -54,7 +55,7 @@ namespace CardGame.Models
             }
 
             // El dealer reparte las cartas a si mismo
-            _cartasDelDealer = Dealer.RepartirCartas(2);
+            Dealer.ObtenerCartas(Dealer.RepartirCartas(2));
 
             // Cada jugador juega su turno
             foreach(var jugador in _jugadores)
@@ -63,7 +64,7 @@ namespace CardGame.Models
             }
 
             // El dealer juega su turno
-            // TODO: Implementar
+            Dealer.RealizarJugada();
 
             // Se muestra el ganador
             MostrarGanador();
@@ -77,7 +78,9 @@ namespace CardGame.Models
 
         public void MostrarGanador()
         {
-            int puntajeDealer = CalcularPuntaje(_cartasDelDealer);
+            var Dealer = this.Dealer as BlackJackDealer ?? throw new Exception("El dealer no es de tipo BlackJackDealer");
+            
+            int puntajeDealer = CalcularPuntaje(Dealer.DevolverTodasLasCartas());
             bool dealerSePaso = puntajeDealer > 21;
 
             Console.WriteLine($"El dealer tiene {puntajeDealer} puntos y ");
