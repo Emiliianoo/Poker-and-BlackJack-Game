@@ -10,6 +10,20 @@ namespace CardGame.Models
 
         /*-_-_-_-_-_-_-_-_-_-_-_-_ Comportamientos de Dealer -_-_-_-_-_-_-_-_-_-_-_-_*/
 
+        //Se crea una variable de tipo IDeckDeCartas para poder utilizar los metodos de la clase Deck
+        private IDeckDeCartas _deck;
+
+        //Se crean los constructores de la clase
+        public BlackJackDealer()
+        {
+            _deck = new Deck();
+        }
+
+        public BlackJackDealer(IDeckDeCartas deck)
+        {
+            this._deck = deck;
+        }
+
 
         public void BarajearDeck()
         {
