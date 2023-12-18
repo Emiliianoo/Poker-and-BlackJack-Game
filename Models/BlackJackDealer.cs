@@ -13,15 +13,34 @@ namespace CardGame.Models
         //Se crea una variable de tipo IDeckDeCartas para poder utilizar los metodos de la clase Deck
         private IDeckDeCartas _deck;
 
+         private List<ICarta> _cartas;
+        public List<ICarta> Cartas
+        {
+            get
+            {
+                return _cartas;
+            }
+            set
+            {
+                if(value == null)
+                {
+                    throw new Exception("La lista de cartas no puede ser nula");
+                }
+                _cartas = value;
+            }
+        }
+
         //Se crean los constructores de la clase
         public BlackJackDealer()
         {
             _deck = new Deck();
+            Cartas = new List<ICarta>();
         }
 
         public BlackJackDealer(IDeckDeCartas deck)
         {
             this._deck = deck;
+            Cartas = new List<ICarta>();
         }
 
 
@@ -51,7 +70,22 @@ namespace CardGame.Models
 
         public ICarta DevolverCarta(int indiceCarta)
         {
-            throw new NotImplementedException();
+             //Devuelve la carta que se encuentra en el indice indicado si es que este existe
+            if (indiceCarta < Cartas.Count && indiceCarta >= 0)
+            {
+                //Obtener la carta que se encuentra en el indice indicado            
+                ICarta cartaADevolver = Cartas[indiceCarta];         
+
+                //Quitar la carta de la lista de cartas del jugador
+                Cartas.RemoveAt(indiceCarta);
+
+                //Devolver la carta
+                return cartaADevolver;
+            }
+            else
+            {
+                throw new Exception("El indice de la carta para devolver no existe");
+            }
         }
 
         public List<ICarta> DevolverTodasLasCartas()
