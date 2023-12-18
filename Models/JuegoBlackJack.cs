@@ -31,7 +31,20 @@ namespace CardGame.Models
 
         public void IniciarJuego()
         {
-            throw new NotImplementedException();
+            // El dealer barajea las cartas
+            Dealer.BarajearDeck();
+
+            // El dealer reparte las cartas a los jugadores
+            foreach(var jugador in _jugadores)
+            {
+                jugador.ObtenerCartas(Dealer.RepartirCartas(2));
+            }
+
+            // El dealer reparte las cartas a si mismo
+            // TODO: Implementar
+
+            // Se juega la ronda
+            JugarRonda();
         }
 
         public void JugarRonda()
