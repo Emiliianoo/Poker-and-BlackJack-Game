@@ -27,7 +27,7 @@ namespace CardGame.Models
 
         public void BarajearDeck()
         {
-            throw new NotImplementedException();
+            _deck.BarajearDeck();
         }
 
         public void RecogerCartas(List<ICarta> cartas)
