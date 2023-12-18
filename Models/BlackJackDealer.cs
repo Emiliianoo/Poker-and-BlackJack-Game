@@ -112,7 +112,17 @@ namespace CardGame.Models
 
         public ICarta MostrarCarta(int indiceCarta)
         {
-            throw new NotImplementedException();
+            //Muestra la carta que se encuentra en el indice indicado si es que este existe
+            if (indiceCarta < Cartas.Count)
+            {
+                //Mostrar la carta en la consola
+                Console.WriteLine(Cartas[indiceCarta].Figura + " de " + Cartas[indiceCarta].Valor);
+                return Cartas[indiceCarta];
+            }
+            else
+            {
+                throw new Exception("El indice de la carta para mostrar no existe");
+            }
         }
 
         public List<ICarta> MostrarCartas()
