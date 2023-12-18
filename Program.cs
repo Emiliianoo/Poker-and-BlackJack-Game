@@ -17,7 +17,7 @@ namespace CardGame
             if(opcion == 1)
             {
                 //Crear un juego de poker
-                var juegoPoker = new JuegoPoker();
+                var juegoPoker = new JuegoPoker(1);
 
                 //Preguntar cuantos jugadores van a jugar
                 Console.WriteLine("Cuantos jugadores van a jugar?");
