@@ -37,7 +37,13 @@ namespace CardGame.Models
 
         public List<ICarta> RepartirCartas(int numeroDeCartas)
         {
-            throw new NotImplementedException();
+            var cartasARepartir = new List<ICarta>();
+            for(int i = 0; i < numeroDeCartas; i++)
+            {
+                cartasARepartir.Add(_deck.SacarCarta(0));
+            }
+
+            return cartasARepartir;
         }
 
 
