@@ -68,7 +68,7 @@ namespace CardGame.Models
         public ICarta DevolverCarta(int indiceCarta)
         {
             //Devuelve la carta que se encuentra en el indice indicado si es que este existe
-            if (indiceCarta < Cartas.Count)
+            if (indiceCarta < Cartas.Count && indiceCarta >= 0)
             {
                 //Obtener la carta que se encuentra en el indice indicado            
                 ICarta cartaADevolver = Cartas[indiceCarta];         
@@ -110,7 +110,7 @@ namespace CardGame.Models
         public ICarta MostrarCarta(int indiceCarta)
         {
             //Muestra la carta que se encuentra en el indice indicado si es que este existe
-            if (indiceCarta < Cartas.Count)
+            if (indiceCarta < Cartas.Count && indiceCarta >= 0)
             {
                 //Mostrar la carta en la consola
                 Console.WriteLine(Cartas[indiceCarta].Figura + " de " + Cartas[indiceCarta].Valor);
