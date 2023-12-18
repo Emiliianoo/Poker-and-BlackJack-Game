@@ -67,7 +67,22 @@ namespace CardGame.Models
 
         public ICarta DevolverCarta(int indiceCarta)
         {
-            throw new NotImplementedException();
+           //Devuelve la carta que se encuentra en el indice indicado si es que este existe
+            if (indiceCarta < Cartas.Count)
+            {
+                //Obtener la carta que se encuentra en el indice indicado            
+                ICarta cartaADevolver = Cartas[indiceCarta];         
+
+                //Quitar la carta de la lista de cartas del jugador
+                Cartas.RemoveAt(indiceCarta);
+
+                //Devolver la carta
+                return cartaADevolver;
+            }
+            else
+            {
+                throw new Exception("El indice de la carta para devolver no existe");
+            }
         }
 
         public List<ICarta> DevolverTodasLasCartas()
