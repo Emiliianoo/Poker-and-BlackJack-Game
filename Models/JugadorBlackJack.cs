@@ -1,5 +1,6 @@
 using System;
 using CardGame.Interfaces;
+using CardGame.Enumeradores;
 
 namespace CardGame.Models
 {
@@ -149,6 +150,45 @@ namespace CardGame.Models
             } else {
                 throw new Exception("No hay cartas para agregar");
             }
+        }
+
+        private int CalcularPuntaje(List<ICarta> cartas)
+        {
+            int puntajeSinAses = 0;
+            int numeroDeAses = 0;
+
+            foreach(var carta in cartas)
+            {
+                bool esDiezOMayor = carta.Valor == ValoresCartasEnum.Diez || 
+                                    carta.Valor == ValoresCartasEnum.Jota || 
+                                    carta.Valor == ValoresCartasEnum.Reina || 
+                                    carta.Valor == ValoresCartasEnum.Rey;
+                
+                if(esDiezOMayor)
+                {
+                    puntajeSinAses += 10;
+                }
+                else if(carta.Valor == ValoresCartasEnum.As)
+                {
+                    numeroDeAses++;
+                }
+                else
+                {
+                    puntajeSinAses += (int)carta.Valor;
+                }
+            }
+
+            int puntajeTemporalAses = numeroDeAses * 11;
+
+            while(puntajeTemporalAses + puntajeSinAses > 21 && numeroDeAses > 0)
+            {
+                puntajeTemporalAses -= 10;
+                numeroDeAses--;
+            }
+
+            int puntajeFinal = puntajeSinAses + puntajeTemporalAses;
+
+            return puntajeFinal;
         }
 
         public void RealizarJugada()
