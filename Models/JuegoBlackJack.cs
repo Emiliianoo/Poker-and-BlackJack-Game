@@ -9,15 +9,17 @@ namespace CardGame.Models
     {
         private List<IJugador> _jugadores;
         private List<ICarta> _cartasDelDealer;
+        private int _numeroDeRonadas;
 
         public IDealer Dealer { get; private set; }
 
         public bool JuegoTerminado => throw new NotImplementedException();
 
-        public JuegoBlackJack()
+        public JuegoBlackJack(int nRondas)
         {
             _jugadores = new List<IJugador>();
             //Dealer = new BlackJackDealer();
+            _numeroDeRonadas = nRondas;
         }
 
         public void AgregarJugador(IJugador jugador)
@@ -34,6 +36,14 @@ namespace CardGame.Models
 
         public void IniciarJuego()
         {
+            for(int i = 0; i < _numeroDeRonadas; i++)
+            {
+                JugarRonda();
+            }
+        }
+
+        public void JugarRonda()
+        {
             // El dealer barajea las cartas
             Dealer.BarajearDeck();
 
@@ -46,12 +56,6 @@ namespace CardGame.Models
             // El dealer reparte las cartas a si mismo
             _cartasDelDealer = Dealer.RepartirCartas(2);
 
-            // Se juega la ronda
-            JugarRonda();
-        }
-
-        public void JugarRonda()
-        {
             // Cada jugador juega su turno
             foreach(var jugador in _jugadores)
             {
@@ -63,6 +67,12 @@ namespace CardGame.Models
 
             // Se muestra el ganador
             MostrarGanador();
+
+            // Se limpia la mesa
+            foreach(var jugador in _jugadores)
+            {
+                Dealer.RecogerCartas(jugador.DevolverTodasLasCartas());
+            }
         }
 
         public void MostrarGanador()
