@@ -32,7 +32,7 @@ namespace CardGame.Models
 
         public void RecogerCartas(List<ICarta> cartas)
         {
-            throw new NotImplementedException();
+            _deck.MeterCarta(cartas);
         }
 
         public List<ICarta> RepartirCartas(int numeroDeCartas)
