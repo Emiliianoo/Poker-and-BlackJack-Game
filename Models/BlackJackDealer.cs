@@ -196,7 +196,16 @@ namespace CardGame.Models
 
         public void RealizarJugada()
         {
-            throw new NotImplementedException();
+            int puntaje = CalcularPuntaje(Cartas);    
+
+            while(puntaje < 17)
+            {
+                Console.WriteLine($"El Dealer pide una carta");
+                ObtenerCartas(RepartirCartas(1));
+                puntaje = CalcularPuntaje(Cartas);
+            }
+
+            Console.WriteLine($"El Dealer se planta");
         }
 
 
