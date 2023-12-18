@@ -49,7 +49,17 @@ namespace CardGame.Models
 
         public void JugarRonda()
         {
-            throw new NotImplementedException();
+            // Cada jugador juega su turno
+            foreach(var jugador in _jugadores)
+            {
+                jugador.RealizarJugada();
+            }
+
+            // El dealer juega su turno
+            // TODO: Implementar
+
+            // Se muestra el ganador
+            MostrarGanador();
         }
 
         public void MostrarGanador()
