@@ -40,10 +40,13 @@ namespace CardGame.Models
 
         public bool JuegoTerminado { get; private set; } = false;
 
-        public JuegoPoker()
+        private int _numeroDeRondas;
+
+        public JuegoPoker(int nRondas)
         {
             _dealer = new PokerDealer();
             _jugadores = new List<IJugador>();
+            _numeroDeRondas = nRondas;
         }
 
         public void AgregarJugador(IJugador jugador)
@@ -60,6 +63,20 @@ namespace CardGame.Models
 
         public void IniciarJuego()
         {
+            int ronda = 1;
+            while(!JuegoTerminado)
+            {
+                Console.WriteLine($"\n------------------RONDA {ronda}------------------\n");
+                JugarRonda();
+                _numeroDeRondas--;
+                ronda++;
+
+                if(_numeroDeRondas == 0) JuegoTerminado = true;
+            }
+        }
+
+        public void JugarRonda()
+        {
             // Se barajea el deck
             _dealer.BarajearDeck();
 
@@ -70,11 +87,6 @@ namespace CardGame.Models
                 jugador.ObtenerCartas(cartas);
             }
 
-            JugarRonda();
-        }
-
-        public void JugarRonda()
-        {
             // Cada jugador realiza su jugada
             foreach(var jugador in _jugadores)
             {
