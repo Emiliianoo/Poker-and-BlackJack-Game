@@ -87,7 +87,24 @@ namespace CardGame.Models
 
         public List<ICarta> DevolverTodasLasCartas()
         {
-            throw new NotImplementedException();
+            // Devuelve todas las cartas del jugador si es que este tiene cartas
+            if (Cartas.Count == 0)
+            {
+                throw new Exception("El jugador no tiene cartas para devolver");
+            }
+            else
+            {
+                // Obtener todas las cartas del jugador
+                List<ICarta> cartasADevolver = new List<ICarta>(Cartas);
+
+                // Quitar todas las cartas de la lista de cartas del jugador
+                Cartas.RemoveAll(carta => true);
+
+                Dealer.RecogerCartas(cartasADevolver);
+
+                // Devolver todas las cartas
+                return cartasADevolver;
+            }
         }
 
         public ICarta MostrarCarta(int indiceCarta)
