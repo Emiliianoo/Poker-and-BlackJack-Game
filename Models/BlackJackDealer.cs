@@ -127,7 +127,21 @@ namespace CardGame.Models
 
         public List<ICarta> MostrarCartas()
         {
-            throw new NotImplementedException();
+             //Muestra todas las cartas del jugador si es que este tiene cartas
+            if (Cartas.Count == 0)
+            {
+                throw new Exception("El Dealer no tiene cartas para mostrar");
+            }
+            else
+            {
+                Console.WriteLine($"El Dealer tiene las siguientes cartas: ");
+                //Mostrar todas las cartas en la consola
+                foreach (ICarta carta in Cartas)
+                {
+                    Console.WriteLine(carta.Figura + " de " + carta.Valor);
+                }
+                return Cartas;
+            }
         }
 
         public void ObtenerCartas(List<ICarta> cartas)
