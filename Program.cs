@@ -8,55 +8,72 @@ namespace CardGame
     {
         static void Main(string[] args)
         {
-            //Preguntar que juego quiere jugar
-            Console.WriteLine("Bienvenido, que juego desea jugar?");
-            Console.WriteLine("1) Poker, 2) BlackJack");
-            
-            int opcion = Convert.ToInt32(Console.ReadLine());
-
-            if(opcion == 1)
+            try
             {
-                //Crear un juego de poker
-                var juegoPoker = new JuegoPoker(1);
-
-                //Preguntar cuantos jugadores van a jugar
-                Console.WriteLine("Cuantos jugadores van a jugar?");
-                int numeroJugadores = Convert.ToInt32(Console.ReadLine());
-
-                //Crear los jugadores
-                for(int i = 0; i < numeroJugadores; i++)
-                {
-                    string nombreJugador = CrearNombreJugador();
-                    juegoPoker.AgregarJugador(new JugadorPoker(nombreJugador, juegoPoker.Dealer));                    
-                }
-
-                //Iniciar el juego
-                juegoPoker.IniciarJuego();
+                //Preguntar que juego quiere jugar
+                Console.WriteLine("Bienvenido, que juego desea jugar?");
+                Console.WriteLine("1) Poker, 2) BlackJack");
                 
-            } 
-            else if(opcion == 2)
-            {
-                //Crear un juego de BlackJack
-                var juegoBlackJack = new JuegoBlackJack(1);
+                int opcion = Convert.ToInt32(Console.ReadLine());
 
-                //Preguntar cuantos jugadores van a jugar
-                Console.WriteLine("Cuantos jugadores van a jugar?");
-                int numeroJugadores = Convert.ToInt32(Console.ReadLine());
-
-                //Crear los jugadores
-                for(int i = 0; i < numeroJugadores; i++)
+                if(opcion == 1)
                 {
-                    string nombreJugador = CrearNombreJugador();
-                    juegoBlackJack.AgregarJugador(new JugadorBlackJack(nombreJugador, juegoBlackJack.Dealer));                    
-                }
+                    //Crear un juego de poker
+                    var juegoPoker = new JuegoPoker(nRondas: 1);
 
-                //Iniciar el juego
-                juegoBlackJack.IniciarJuego();
-            } 
-            else 
-            {
-                throw new Exception("Opcion no valida");
+                    //Preguntar cuantos jugadores van a jugar
+                    Console.WriteLine("Cuantos jugadores van a jugar?");
+                    int numeroJugadores = Convert.ToInt32(Console.ReadLine());
+
+                    if(numeroJugadores < 2 || numeroJugadores > 6)
+                    {
+                        throw new Exception("El numero de jugadores debe ser entre 2 y 6");
+                    }
+
+                    //Crear los jugadores
+                    for(int i = 0; i < numeroJugadores; i++)
+                    {
+                        string nombreJugador = CrearNombreJugador();
+                        juegoPoker.AgregarJugador(new JugadorPoker(nombreJugador, juegoPoker.Dealer));                    
+                    }
+
+                    //Iniciar el juego
+                    juegoPoker.IniciarJuego();
+                    
+                } 
+                else if(opcion == 2)
+                {
+                    //Crear un juego de BlackJack
+                    var juegoBlackJack = new JuegoBlackJack(nRondas: 1);
+
+                    //Preguntar cuantos jugadores van a jugar
+                    Console.WriteLine("Cuantos jugadores van a jugar?");
+                    int numeroJugadores = Convert.ToInt32(Console.ReadLine());
+
+                    if(numeroJugadores < 2 || numeroJugadores > 6)
+                    {
+                        throw new Exception("El numero de jugadores debe ser entre 2 y 6");
+                    }
+
+                    //Crear los jugadores
+                    for(int i = 0; i < numeroJugadores; i++)
+                    {
+                        string nombreJugador = CrearNombreJugador();
+                        juegoBlackJack.AgregarJugador(new JugadorBlackJack(nombreJugador, juegoBlackJack.Dealer));                    
+                    }
+
+                    //Iniciar el juego
+                    juegoBlackJack.IniciarJuego();
+                } 
+                else 
+                {
+                    throw new Exception("Opcion no valida");
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }            
         }
         
         static string CrearNombreJugador()
