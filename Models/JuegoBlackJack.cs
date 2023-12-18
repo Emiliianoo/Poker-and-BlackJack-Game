@@ -12,7 +12,7 @@ namespace CardGame.Models
 
         public IDealer Dealer { get; private set; }
 
-        public bool JuegoTerminado => throw new NotImplementedException();
+        public bool JuegoTerminado { get; private set;}
 
         public JuegoBlackJack(int nRondas)
         {
@@ -35,9 +35,16 @@ namespace CardGame.Models
 
         public void IniciarJuego()
         {
-            for(int i = 0; i < _numeroDeRonadas; i++)
+
+            int ronda = 1;
+            while(!JuegoTerminado)
             {
+                Console.WriteLine($"\n------------------RONDA {ronda}------------------\n");
                 JugarRonda();
+                _numeroDeRonadas--;
+                ronda++;
+
+                if(_numeroDeRonadas == 0) JuegoTerminado = true;
             }
         }
 
@@ -68,41 +75,57 @@ namespace CardGame.Models
 
             // Se muestra el ganador
             MostrarGanador();
-
-            // Se limpia la mesa
-            foreach(var jugador in _jugadores)
-            {
-                Dealer.RecogerCartas(jugador.DevolverTodasLasCartas());
-            }
         }
 
         public void MostrarGanador()
         {
             var Dealer = this.Dealer as BlackJackDealer ?? throw new Exception("El dealer no es de tipo BlackJackDealer");
-            
+
+            Console.WriteLine($"\n------------------RESULTADOS------------------\n");
+
+            Dealer.MostrarCartas();
+
             int puntajeDealer = CalcularPuntaje(Dealer.DevolverTodasLasCartas());
             bool dealerSePaso = puntajeDealer > 21;
 
-            Console.WriteLine($"El dealer tiene {puntajeDealer} puntos y ");
+            Console.Write($"El dealer tiene {puntajeDealer} puntos");
+
+            if(dealerSePaso) Console.WriteLine(" y perdió.\n");
+            else Console.WriteLine("\n");
+
+            
+
             foreach(var jugador in _jugadores)
             {
+                var jugadorActual = jugador as JugadorBlackJack ?? throw new Exception("El jugador no es de tipo JugadorBlackJack");
+                
+                jugadorActual.MostrarCartas();
+
                 int puntajeJugador = CalcularPuntaje(jugador.DevolverTodasLasCartas());
+
+                Console.WriteLine($"El jugador {jugadorActual.Nombre} tiene {puntajeJugador} puntos");
 
                 if(puntajeJugador > 21) 
                 {
-                    Console.WriteLine($"El jugador {jugador} perdio");
+                    Console.WriteLine($"El jugador {jugadorActual.Nombre} perdio");
                 }
                 else
                 {
                     if(dealerSePaso || puntajeJugador > puntajeDealer)
                     {
-                        Console.WriteLine($"El jugador {jugador} gano");
+                        Console.WriteLine($"El jugador {jugadorActual.Nombre} gano");
+                    }
+                    else if(puntajeJugador == puntajeDealer)
+                    {
+                        Console.WriteLine($"El jugador {jugadorActual.Nombre} empato");
                     }
                     else
                     {
-                        Console.WriteLine($"El jugador {jugador} perdio");
+                        Console.WriteLine($"El jugador {jugadorActual.Nombre} perdio");
                     }
                 }
+
+                Console.WriteLine();
             }
         }
 
